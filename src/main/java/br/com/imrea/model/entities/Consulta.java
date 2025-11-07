@@ -13,66 +13,64 @@ public class Consulta {
     private TipoConsulta tipoConsulta;
     private StatusConsulta status;
 
-    public Consulta() {
-    }
+    // ✅ Construtor vazio (necessário para frameworks e serialização)
+    public Consulta() {}
 
-    public Consulta(Paciente paciente, Medico medico, LocalDateTime dataConsulta, TipoConsulta tipoConsulta, StatusConsulta status) {
+    // ✅ Construtor completo
+    public Consulta(Paciente paciente, Medico medico, LocalDateTime dataConsulta,
+                    TipoConsulta tipoConsulta, StatusConsulta status) {
+
         this.paciente = paciente;
         this.medico = medico;
         this.dataConsulta = dataConsulta;
         this.tipoConsulta = tipoConsulta;
         this.status = status;
+
+        // Log seguro — evita erro se paciente ou médico vierem nulos
+        String nomePac = (paciente != null && paciente.getPessoa() != null)
+                ? paciente.getPessoa().getNome()
+                : "Sem nome de paciente";
+        String nomeMed = (medico != null && medico.getPessoa() != null)
+                ? medico.getPessoa().getNome()
+                : "Sem nome de médico";
+
+        System.out.println("🔹 Criando Consulta: " + nomePac + " | " + nomeMed);
     }
 
-    public long getId() {
-        return this.id;
-    }
+    // --- Getters e Setters ---
+    public long getId() { return id; }
+    public void setId(long id) { this.id = id; }
 
-    public void setId(long id) {
-        this.id = id;
-    }
+    public Paciente getPaciente() { return paciente; }
+    public void setPaciente(Paciente paciente) { this.paciente = paciente; }
 
-    public Paciente getPaciente() {
-        return this.paciente;
-    }
+    public Medico getMedico() { return medico; }
+    public void setMedico(Medico medico) { this.medico = medico; }
 
-    public void setPaciente(Paciente paciente) {
-        this.paciente = paciente;
-    }
+    public LocalDateTime getDataConsulta() { return dataConsulta; }
+    public void setDataConsulta(LocalDateTime dataConsulta) { this.dataConsulta = dataConsulta; }
 
-    public Medico getMedico() {
-        return this.medico;
-    }
+    public TipoConsulta getTipoConsulta() { return tipoConsulta; }
+    public void setTipoConsulta(TipoConsulta tipoConsulta) { this.tipoConsulta = tipoConsulta; }
 
-    public void setMedico(Medico medico) {
-        this.medico = medico;
-    }
+    public StatusConsulta getStatus() { return status; }
+    public void setStatus(StatusConsulta status) { this.status = status; }
 
-    public LocalDateTime getDataConsulta() {
-        return this.dataConsulta;
-    }
-
-    public void setDataConsulta(LocalDateTime dataConsulta) {
-        this.dataConsulta = dataConsulta;
-    }
-
-    public TipoConsulta getTipoConsulta() {
-        return this.tipoConsulta;
-    }
-
-    public void setTipoConsulta(TipoConsulta tipoConsulta) {
-        this.tipoConsulta = tipoConsulta;
-    }
-
-    public StatusConsulta getStatus() {
-        return this.status;
-    }
-
-    public void setStatus(StatusConsulta status) {
-        this.status = status;
-    }
-
+    // --- Representação em texto ---
+    @Override
     public String toString() {
-        return String.format("Consulta #%d | Paciente: %s | Médico: %s | Data: %s | Tipo: %s | Status: %s", this.id, this.paciente.getPessoa().getNome(), this.medico.getPessoa().getNome(), this.dataConsulta.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")), this.tipoConsulta, this.status);
+        String nomePac = (paciente != null && paciente.getPessoa() != null)
+                ? paciente.getPessoa().getNome()
+                : "Sem nome de paciente";
+        String nomeMed = (medico != null && medico.getPessoa() != null)
+                ? medico.getPessoa().getNome()
+                : "Sem nome de médico";
+        String data = (dataConsulta != null)
+                ? dataConsulta.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
+                : "Data indefinida";
+
+        return String.format("Consulta #%d | Paciente: %s | Médico: %s | Data: %s | Tipo: %s | Status: %s",
+                id, nomePac, nomeMed, data, tipoConsulta, status);
     }
 }
+

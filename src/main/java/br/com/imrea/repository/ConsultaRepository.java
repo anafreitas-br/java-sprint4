@@ -7,6 +7,8 @@ import br.com.imrea.model.entities.Pessoa;
 import br.com.imrea.model.enums.Especialidade;
 import br.com.imrea.model.enums.StatusConsulta;
 import br.com.imrea.model.enums.TipoConsulta;
+import br.com.imrea.util.ConsultaTO;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -78,7 +80,7 @@ public class ConsultaRepository {
                 Medico medico = new Medico();
                 medico.setId(rs.getLong("medico_id"));
                 medico.setPessoa(pessoaMedico);
-                Especialidade.valueOf(rs.getString("especialidade"));
+                medico.setEspecialidade(Especialidade.valueOf(rs.getString("especialidade")));
                 Consulta consulta = new Consulta();
                 consulta.setId(rs.getLong("consulta_id"));
                 consulta.setDataConsulta(rs.getTimestamp("data_consulta").toLocalDateTime());
@@ -123,6 +125,35 @@ public class ConsultaRepository {
         }
 
         return null;
+    }
+
+    public List<ConsultaTO> findAllResumo() throws SQLException {
+        String sql = """
+        SELECT pes_p.nome AS nome_paciente,
+               pes_m.nome AS nome_medico,
+               m.especialidade AS especialidade,
+               c.data_consulta
+        FROM ch_consultas c
+        JOIN ch_pacientes p  ON c.paciente_id = p.id
+        JOIN ch_pessoas  pes_p ON p.id = pes_p.id
+        JOIN ch_medicos  m ON c.medico_id = m.id
+        JOIN ch_pessoas  pes_m ON m.id = pes_m.id
+        ORDER BY c.data_consulta ASC
+    """;
+
+        List<ConsultaTO> lista = new ArrayList<>();
+        try (PreparedStatement pstmt = con.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            while (rs.next()) {
+                lista.add(new ConsultaTO(
+                        rs.getString("nome_paciente"),
+                        rs.getString("nome_medico"),
+                        rs.getString("especialidade"),
+                        rs.getTimestamp("data_consulta").toLocalDateTime()
+                ));
+            }
+        }
+        return lista;
     }
 
     public void updateStatus(long id, StatusConsulta statusConsulta) throws SQLException {
