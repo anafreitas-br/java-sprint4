@@ -1,5 +1,16 @@
+# Etapa 1: build com Maven
+FROM quay.io/quarkus/ubi9-quarkus-mandrel-builder-image:jdk-21 AS build
+WORKDIR /code
+COPY mvnw ./
+COPY .mvn .mvn
+COPY pom.xml .
+RUN ./mvnw dependency:go-offline
+COPY src ./src
+RUN ./mvnw clean package -DskipTests
+
+# Etapa 2: imagem final
 FROM eclipse-temurin:21-jdk
 WORKDIR /app
-COPY target/quarkus-app/ /app/quarkus-app/
+COPY --from=build /code/target/quarkus-app/ /app/quarkus-app/
 EXPOSE 8080
 CMD ["java", "-Dquarkus.profile=prod", "-jar", "quarkus-app/quarkus-run.jar"]
