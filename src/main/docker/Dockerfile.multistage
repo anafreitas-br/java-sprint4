@@ -1,15 +1,5 @@
-FROM eclipse-temurin:21-jdk AS build
+FROM eclipse-temurin:21-jdk
 WORKDIR /app
-COPY mvnw .
-COPY .mvn .mvn
-COPY pom.xml .
-RUN ./mvnw dependency:go-offline -B
-COPY src src
-RUN ./mvnw clean package -DskipTests
-
-FROM eclipse-temurin:21-jre
-WORKDIR /app
-COPY --from=build /app/target/quarkus-app /app/
-ENV PORT=8080
+COPY target/quarkus-app/ /app/quarkus-app/
 EXPOSE 8080
-CMD ["java", "-jar", "/app/quarkus-run.jar"]
+CMD ["java", "-Dquarkus.profile=prod", "-jar", "quarkus-app/quarkus-run.jar"]
