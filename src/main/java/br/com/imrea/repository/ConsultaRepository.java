@@ -53,7 +53,7 @@ public class ConsultaRepository {
                 Consulta c = new Consulta();
                 c.setId(rs.getLong("id"));
                 c.setDataConsulta(rs.getTimestamp("data_consulta").toLocalDateTime());
-                TipoConsulta.valueOf(rs.getString("tipo_consulta"));
+                c.setTipoConsulta(TipoConsulta.valueOf(rs.getString("tipo_consulta")));
                 c.setStatus(StatusConsulta.valueOf(rs.getString("status_consulta")));
                 return c;
             } else {
@@ -64,7 +64,21 @@ public class ConsultaRepository {
 
     public List<Consulta> findAllComDadosCompletos() throws SQLException {
         List<Consulta> consultas = new ArrayList();
-        String sql = "SELECT c.id as consulta_id, c.data_consulta, c.tipo_consulta, c.status_consulta,\n       p.id as paciente_id, pes_p.nome as nome_paciente,\n       m.id as medico_id, pes_m.nome as nome_medico, m.especialidade\nFROM ch_consultas c\nJOIN ch_pacientes p ON c.paciente_id = p.id\nJOIN ch_pessoas pes_p ON p.id = pes_p.id\nJOIN ch_medicos m ON c.medico_id = m.id\nJOIN ch_pessoas pes_m ON m.id = pes_m.id\n";
+        String sql = """
+                SELECT\s
+                  c.id AS consulta_id,\s
+                  c.data_consulta,\s
+                  c.tipo_consulta,\s
+                  c.status_consulta,
+                  p.id AS paciente_id, pes_p.nome AS nome_paciente,
+                  m.id AS medico_id, pes_m.nome AS nome_medico, m.especialidade
+                FROM ch_consultas c
+                JOIN ch_pacientes p ON c.paciente_id = p.id
+                JOIN ch_pessoas pes_p ON p.id = pes_p.id
+                JOIN ch_medicos m ON c.medico_id = m.id
+                JOIN ch_pessoas pes_m ON m.id = pes_m.id
+                
+                """;
 
         try (PreparedStatement stmt = this.con.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();

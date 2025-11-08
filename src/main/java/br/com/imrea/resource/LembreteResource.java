@@ -130,7 +130,7 @@ public class LembreteResource {
             );
 
             return Response.status(Response.Status.CREATED)
-                    .entity(lembrete)
+                    .entity(retorno)
                     .build();
         } catch (SQLException e) {
             return Response.serverError()

@@ -215,11 +215,12 @@ public class LembreteRepository {
             pstmt.setString(1, resposta.toUpperCase());
             if ("SIM".equalsIgnoreCase(resposta)) {
                 pstmt.setString(2, StatusLembrete.CONFIRMADO.name());
-            } else if (!"NAO".equalsIgnoreCase(resposta) && !"NÃO".equals(resposta)) {
-                pstmt.setString(2, StatusLembrete.PENDENTE.name());
-            } else {
+            } else if ("NAO".equalsIgnoreCase(resposta) || "NÃO".equalsIgnoreCase(resposta)) {
                 pstmt.setString(2, StatusLembrete.FALHOU.name());
+            } else {
+                pstmt.setString(2, StatusLembrete.PENDENTE.name());
             }
+
 
             pstmt.setLong(3, id);
             pstmt.executeUpdate();

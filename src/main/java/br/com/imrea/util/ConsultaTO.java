@@ -2,10 +2,6 @@ package br.com.imrea.util;
 
 import java.time.LocalDateTime;
 
-/**
- * DTO de resumo de consulta.
- * Retorna apenas os dados essenciais para listagem.
- */
 public class ConsultaTO {
 
     private String nomePaciente;
@@ -14,9 +10,6 @@ public class ConsultaTO {
     private LocalDateTime dataConsulta;
 
     public ConsultaTO(String nomePaciente, String nomeMedico, String especialidade, LocalDateTime dataConsulta) {
-    }
-
-    public void ConsultaTO(String nomePaciente, String nomeMedico, String especialidade, LocalDateTime dataConsulta) {
         this.nomePaciente = nomePaciente;
         this.nomeMedico = nomeMedico;
         this.especialidade = especialidade;
@@ -38,5 +31,5 @@ public class ConsultaTO {
     public LocalDateTime getDataConsulta() {
         return dataConsulta;
     }
-}
 
+}
