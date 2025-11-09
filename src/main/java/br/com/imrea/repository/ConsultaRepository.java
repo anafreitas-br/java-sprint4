@@ -8,14 +8,14 @@ import br.com.imrea.model.enums.Especialidade;
 import br.com.imrea.model.enums.StatusConsulta;
 import br.com.imrea.model.enums.TipoConsulta;
 import br.com.imrea.util.ConsultaTO;
+import br.com.imrea.util.RelatorioEspecialidadeTO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ConsultaRepository {
     private Connection con = (new ConnectionFactory()).getConnection();
@@ -140,6 +140,7 @@ public class ConsultaRepository {
 
         return null;
     }
+
 
     public List<ConsultaTO> findAllResumo() throws SQLException {
         String sql = """
